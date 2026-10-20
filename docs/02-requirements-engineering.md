@@ -534,3 +534,120 @@ Organization registration, approval, authentication, account activation, and gen
     - The system shall not automatically delete historical records or reactivate an organization merely because a period of time has elapsed.
     
     **Note:** Suspension and deactivation both restrict ordinary organization-level functionality in Version 1. Suspension represents a temporary restriction, while deactivation represents a formal disabling of the organization. Historical data shall remain stored unless a separately defined data-retention policy requires otherwise.
+
+#### 4.3 User Management
+
+This section defines the functional requirements for managing user records within an organization. It covers user creation, profile viewing, profile updating, role assignment, organization association, and user deactivation.
+
+User authentication, account activation, password management, and general authorization rules are defined in Section 4.1. Organization lifecycle and organization-level data isolation are defined in Section 4.2.
+
+- **FR-USER-001 — User Account Creation**
+    
+    **Actor:** Organization Administrator or explicitly authorized organizational user
+    
+    **Description:**
+    
+    The system shall allow authorized users to create user accounts within their organization according to the organization's type, the creator's permissions, and the creator's assigned responsibilities.
+    
+    **Expected behavior:**
+    
+    - The system shall collect and validate the required information before creating a user account.
+    - The system shall associate the new user with the correct organization.
+    - The system shall permit only roles supported by the organization's type.
+    - The system shall enforce the global email uniqueness policy defined in Section 4.1.
+    - The system shall allow an Organization Administrator to create accounts for users supported by their organization type and permissions.
+    - In a School, an assigned class teacher may create student accounts only within their assigned class and permitted responsibilities.
+    - In a College, an authorized Faculty member assigned as HOD may create student accounts only within their assigned department and permitted responsibilities.
+    - In a Company, authorized HR personnel may create employee accounts within their permitted responsibilities.
+    - The system shall not allow teachers, faculty members, or HR personnel to create accounts outside their authorized scope.
+    - The system shall reject user creation requests from unauthorized actors or requests containing invalid information or unsupported roles.
+    - The system shall follow the account activation and initial credential requirements defined in Section 4.1.
+    - The system shall enforce the email uniqueness policy defined in Section 4.1 when creating a user account.
+- **FR-USER-002 — User Profile Viewing**
+    
+    **Actor:** Authorized organizational user
+    
+    **Description:**
+    
+    The system shall allow authorized users to view user information according to their role, permissions, and organizational responsibilities.
+    
+    **Expected behavior:**
+    
+    - The system shall display only the user information permitted for the requesting user's role.
+    - Users shall be able to view their own permitted profile information.
+    - Organization Administrators shall be able to view permitted profile information for users within their organization.
+    - Teachers and faculty members shall be able to view student information within their authorized scope.
+    - HR personnel shall be able to view employee information within their authorized scope.
+    - The system shall prevent unauthorized access to private user information, including password hashes and authentication secrets.
+    - The system shall prevent users from viewing information outside their authorized organizational scope.
+    - Authorized administrators shall be able to access deactivated user records for legitimate administrative and historical purposes.
+- **FR-USER-003 — User Profile Updating**
+    
+    **Actor:** Authorized organizational user
+    
+    **Description:**
+    
+    The system shall allow authorized users to update permitted user profile information.
+    
+    **Expected behavior:**
+    
+    - The system shall allow updates only to fields the requesting user is authorized to modify.
+    - The system shall validate submitted information before saving changes.
+    - The system shall reject invalid or unauthorized update requests.
+    - The system shall preserve existing valid information when an update is rejected.
+    - The system shall prevent ordinary profile updates from changing restricted account status, organization association, or role information without the required authorization.
+    - The system shall enforce the account management and authorization rules defined in Section 4.1.
+- **FR-USER-004 — Role Assignment and Modification**
+    
+    **Actor:** Organization Administrator
+    
+    **Description:**
+    
+    The system shall allow authorized Organization Administrators to assign or change organizational user roles according to the supported organization type and applicable authorization rules.
+    
+    **Expected behavior:**
+    
+    - The system shall restrict school users to applicable school roles, college users to applicable college roles, and company users to applicable company roles.
+    - Only the Organization Administrator shall be permitted to change an existing organizational user's role in Version 1.
+    - The system shall reject unsupported or unauthorized role assignments.
+    - The system shall not allow an Organization Administrator to assign the platform-level Platform Operator role through ordinary organization user management.
+    - The system shall treat class teacher and HOD as additional responsibilities or assignments rather than separate user roles.
+    - The system shall ensure that assigning additional responsibilities does not grant permissions beyond the defined scope of those responsibilities.
+    - Any future delegation of role-management permissions shall require separately defined authorization rules.
+- **FR-USER-005 — User Organization Association**
+    
+    **Actor:** System
+    
+    **Description:**
+    
+    The system shall associate each organizational user with the organization to which the user belongs and enforce the organization isolation requirements defined in Section 4.2.
+    
+    **Expected behavior:**
+    
+    - The system shall establish the user's organization association during account creation.
+    - The system shall prevent unauthorized users from changing their organization association.
+    - The system shall ensure that user management operations respect organization-level data isolation.
+    - The system shall not permit a user to access another organization's records merely by changing a user identifier or organization identifier in a request.
+    - Any future transfer of a user between organizations shall require a separately defined and authorized process.
+- **FR-USER-006 — User Deactivation and Historical Record Preservation**
+    
+    **Actor:** Organization Administrator
+    
+    **Description:**
+    
+    The system shall allow authorized Organization Administrators to deactivate organizational user accounts while preserving historical records required for administrative and reporting purposes.
+    
+    **Expected behavior:**
+    
+    - The system shall permit user deactivation only by authorized Organization Administrators, following the account lifecycle rules defined in Section 4.1.
+    - The system shall enforce the account deactivation and access restrictions defined in Section 4.1.
+    - Deactivation shall not automatically delete the user's account or historical attendance records.
+    - Historical attendance records shall remain associated with the relevant user and organization.
+    - The system shall exclude deactivated users from ordinary active-user lists by default.
+    - The system shall provide authorized administrators with a way to view deactivated user records separately from active users.
+    - The system shall preserve the information necessary to identify users associated with historical attendance records.
+    - Reactivation of a deactivated account shall follow the account lifecycle rules defined in Section 4.1.
+    - Reactivation shall not bypass organization lifecycle restrictions, organization membership requirements, or authorization rules.
+    - Deactivation shall not automatically transfer the user's responsibilities or permissions to another user.
+    - The system shall make assignments held by a deactivated user available for review by authorized administrators, so that necessary responsibilities can be reassigned through the applicable assignment-management process.
+    - Assignment-management requirements shall define how assignments belonging to deactivated users are reviewed, removed, or reassigned and shall ensure that deactivated users cannot continue performing restricted responsibilities.
