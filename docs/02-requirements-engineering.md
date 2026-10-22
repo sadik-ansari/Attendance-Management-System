@@ -651,3 +651,165 @@ User authentication, account activation, password management, and general author
     - Deactivation shall not automatically transfer the user's responsibilities or permissions to another user.
     - The system shall make assignments held by a deactivated user available for review by authorized administrators, so that necessary responsibilities can be reassigned through the applicable assignment-management process.
     - Assignment-management requirements shall define how assignments belonging to deactivated users are reviewed, removed, or reassigned and shall ensure that deactivated users cannot continue performing restricted responsibilities.
+
+#### 4.4 Class, Department, and Organizational Assignment Management
+
+This section defines the functional requirements for managing classes, departments, organizational units, and the assignments that connect users to them.
+
+The system shall support organization-specific structures for Schools, Colleges, and Companies. Assignment records shall determine the organizational scope within which users perform their assigned responsibilities.
+
+User account creation, role management, and account lifecycle rules are defined in Section 4.3. General authorization and organization-level data isolation are defined in Sections 4.1 and 4.2.
+
+Unless otherwise specified, the Organization Administrator shall manage organizational structures and assignments. Other organizational users may manage specific structures or assignment types only when explicitly authorized under the access-control rules defined in Section 4.1. Users shall not be permitted to grant themselves additional permissions.
+
+- **FR-ASSIGN-001 — Organizational Structure Management**
+    
+    **Actor:** Organization Administrator
+    
+    **Description:**
+    
+    The system shall allow authorized Organization Administrators to manage the organizational structures supported by their organization's type.
+    
+    **Expected behavior:**
+    
+    - In a School, the system shall support the management of classes.
+    - In a College, the system shall support the management of departments and the classes or academic groups required by the organization.
+    - In a College, academic groups shall be associated with the appropriate department when the college uses departments.
+    - In a Company, the system shall support optional organizational units, such as departments, according to the organization's needs.
+    - The system shall allow a Company to operate without configuring departments or other organizational units.
+    - The system shall validate required organizational structure information before creating or updating a record.
+    - The system shall prevent unauthorized users from creating, updating, or deactivating organizational structure records.
+    - The system shall prevent organizational structures from being associated with users or records belonging to another organization.
+    - The system shall prevent the deactivation or removal of an organizational structure from silently deleting historical attendance records associated with it.
+    - The system shall not deactivate an organizational structure while active assignments depend on it, unless those assignments are ended or reassigned through an authorized process.
+    - The system shall preserve historical attendance and assignment records associated with a deactivated structure.
+    - The system shall not allow a deactivated structure to receive new active assignments.
+- **FR-ASSIGN-002 — Student Class Assignment**
+    
+    **Actor:** Organization Administrator or explicitly authorized user
+    
+    **Description:**
+    
+    The system shall allow authorized users to assign students to appropriate classes within their organization.
+    
+    **Expected behavior:**
+    
+    - The system shall allow each School student to belong to only one active class at a time.
+    - The system shall allow a student to be assigned only to a valid class belonging to the student's organization.
+    - The system shall verify that the assigning user has permission to manage the relevant class and student.
+    - The system shall reject assignments involving inactive users or unavailable classes, according to the applicable lifecycle rules.
+    - The system shall prevent unauthorized users from creating, modifying, or removing student class assignments.
+    - When a student's class changes, the system shall end the previous active assignment before establishing the new active assignment.
+    - The system shall prevent a class change from leaving a student with multiple active class assignments.
+    - The system shall retain historical attendance records when a student's class assignment changes or is removed.
+    - Historical attendance records shall remain associated with the student and the class applicable when the attendance was recorded.
+- **FR-ASSIGN-003 — Teacher and Faculty Class Assignment**
+    
+    **Actor:** Organization Administrator or explicitly authorized user
+    
+    **Description:**
+    
+    The system shall allow authorized users to assign teachers or faculty members to the classes or academic groups for which they are responsible.
+    
+    **Expected behavior:**
+    
+    - The system shall permit assignments only between eligible users and valid classes or academic groups within the same organization.
+    - The system shall allow a teacher or faculty member to be assigned to one or more classes or academic groups when permitted by the organization's rules.
+    - The system shall maintain current assignment information so that other system functions can determine the user's authorized scope.
+    - The system shall prevent assignments from granting permissions beyond those allowed by the user's role and assigned responsibilities.
+    - The system shall preserve historical attendance records when an assignment is changed or removed.
+    - The system shall ensure that only users with an active account and valid assignment can perform operations that depend on that assignment.
+- **FR-ASSIGN-004 — Class Teacher Assignment**
+    
+    **Actor:** Organization Administrator or explicitly authorized user
+    
+    **Description:**
+    
+    The system shall allow an authorized user to designate an eligible teacher as the class teacher for a School class.
+    
+    **Expected behavior:**
+    
+    - The system shall associate the class teacher responsibility with a valid teacher and class belonging to the same organization.
+    - The system shall allow only eligible teachers to be assigned this responsibility.
+    - The system shall ensure that class teacher responsibilities apply only to the assigned class and explicitly permitted operations.
+    - The system shall prevent an assignment from granting access to unrelated classes or other organizations.
+    - The system shall support changing or removing the class teacher assignment without deleting historical attendance records.
+    - The system shall allow no more than one active class teacher assignment per class at a time.
+    - When a class teacher is deactivated, the system shall ensure that the deactivated teacher can no longer exercise class teacher permissions.
+    - The system shall make the affected class teacher assignment available for authorized administrative review and reassignment.
+    - The system shall allow a teacher to serve as class teacher for multiple classes when permitted by the organization's rules, while ensuring that each class has no more than one active class teacher assignment at a time.
+- FR-ASSIGN-005 — College Department and HOD Assignment
+    
+    **Actor:** Organization Administrator or explicitly authorized user
+    
+    **Description:**
+    
+    The system shall allow authorized users to associate eligible faculty members with College departments and designate an eligible faculty member as the Head of Department (HOD).
+    
+    **Expected behavior:**
+    
+    - The system shall associate faculty and department assignments with the correct organization.
+    - The system shall allow an eligible faculty member to be assigned HOD responsibility for a department.
+    - The system shall permit no more than one active HOD assignment per department at a time.
+    - The system shall prevent a new HOD assignment from becoming active while another HOD assignment for the same department remains active.
+    - When an HOD changes, the previous assignment shall be ended before the replacement assignment becomes active.
+    - HOD responsibilities shall apply only to the assigned department and explicitly permitted operations.
+    - The system shall not grant HOD permissions solely because a user has the Faculty role.
+    - The system shall support changing or removing an HOD assignment without deleting historical attendance records.
+    - When an HOD is deactivated, the system shall ensure that the deactivated faculty member can no longer exercise HOD permissions.
+    - The system shall make the affected HOD assignment available for authorized administrative review and reassignment.
+    - The system shall prevent department assignments from granting unauthorized access to other departments or organizations.
+    - The system shall not grant HOD responsibilities solely because a faculty member is assigned to a department; HOD responsibilities shall require an explicit, active HOD assignment.
+- **FR-ASSIGN-006 — Employee Organizational Unit Assignment**
+    
+    **Actor:** Organization Administrator or explicitly authorized user
+    
+    **Description:**
+    
+    The system shall support assigning employees to the organizational units configured for their Company.
+    
+    **Expected behavior:**
+    
+    - The system shall support assigning employees to valid organizational units belonging to their Company.
+    - The system shall allow employees to remain unassigned to an organizational unit, even when the Company has configured one or more organizational units.
+    - The system shall allow employees to use permitted attendance functionality without an organizational unit assignment, provided they satisfy all other applicable access and attendance requirements.
+    - The system shall restrict organizational-unit assignment changes to authorized users.
+    - The system shall prevent assignments involving users or organizational units belonging to another organization.
+    - The system shall preserve relevant historical records when an employee's organizational assignment changes or ends.
+    - The system shall not grant HR or other administrative permissions solely because an employee is assigned to an organizational unit.
+    - The system shall prevent deactivated employees from exercising permissions that require an active account or valid current assignment, in accordance with Sections 4.1 and 4.3.
+- **FR-ASSIGN-007 — Assignment Updates and Removal**
+    
+    **Actor:** Organization Administrator or explicitly authorized user
+    
+    **Description:**
+    
+    The system shall allow authorized users to update or remove organizational assignments when responsibilities or organizational membership change.
+    
+    **Expected behavior:**
+    
+    - The system shall validate an assignment change before applying it.
+    - The system shall prevent unauthorized users from changing or ending assignments.
+    - The system shall ensure that an ended or replaced assignment no longer grants the associated current responsibilities.
+    - The system shall preserve historical assignments and associated attendance records when an assignment changes or ends.
+    - The system shall handle assignments associated with deactivated users according to the account lifecycle requirements defined in Section 4.3.
+    - When a user is deactivated, the system shall make that user's affected active assignments available for authorized administrative review.
+    - The system shall not automatically transfer responsibilities or grant another user the deactivated user's permissions.
+    - Authorized users shall be able to end or reassign affected responsibilities according to the rules applicable to each assignment type.
+- **FR-ASSIGN-008 — Assignment Scope Enforcement**
+    
+    **Actor:** System
+    
+    **Description:**
+    
+    The system shall ensure that organizational assignments are respected when users access functions or records whose availability depends on a class, department, academic group, or organizational unit.
+    
+    **Expected behavior:**
+    
+    - The system shall verify that a user has the required role, an eligible account status, and a valid assignment whenever the requested operation requires that assignment.
+    - The system shall prevent users from accessing or modifying records outside their authorized assignment scope.
+    - The system shall enforce role-based and assignment-based access restrictions on the server for protected operations.
+    - The system shall reject requests that attempt to bypass assignment restrictions by manipulating resource identifiers, URL parameters, or request data.
+    - The system shall enforce assignment-based restrictions in addition to the organization-level data-isolation requirements defined in Section 4.2.
+    - The system shall enforce the rule that a School student may have only one active class assignment at a time and that a College department may have no more than one active HOD assignment at a time.
+    - The system shall not require a Company employee to have an organizational-unit assignment, regardless of whether the Company has configured organizational units.
